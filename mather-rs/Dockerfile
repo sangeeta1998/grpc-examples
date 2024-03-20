@@ -1,12 +1,20 @@
 # Build container
-FROM debian:bullseye AS build
+FROM rust:latest AS build
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    curl \
+    make \
+    && rm -rf /var/lib/apt/lists/*
 
 # Setup environment
 RUN mkdir -p /data
 WORKDIR /data
 
-# Build the release
+# Copy the source code into the container
 COPY . .
+
+# Build the release
 RUN ./Hydrunfile
 
 # Extract the release
@@ -17,10 +25,10 @@ RUN cp out/release/mather-rs.linux-$(uname -m) /out/mather-rs
 FROM debian:bullseye
 
 # Add certificates
-RUN apt update
-RUN apt install -y ca-certificates
+RUN apt update && apt install -y ca-certificates
 
-# Add the release
+# Copy the release binary from the build stage
 COPY --from=build /out/mather-rs /usr/local/bin/mather-rs
 
 CMD /usr/local/bin/mather-rs
+

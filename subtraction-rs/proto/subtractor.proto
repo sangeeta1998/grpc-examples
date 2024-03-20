@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.pojtinger.felicitas.grpcExamples;
+
+option go_package = "github.com/pojntfx/grpc-examples/gosubtractor/pkg/api/proto/v1";
+
+service Subtractor {
+  rpc Subtract(SubtractInputMessage) returns (SubtractOutputMessage);
+}
+
+message SubtractInputMessage {
+    int64 Minuend = 1;
+    int64 Subtrahend = 2;
+}
+
+message SubtractOutputMessage {
+    int64 Difference = 1;
+}
+

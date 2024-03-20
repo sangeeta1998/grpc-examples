@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mather-rs:
+    build: ./mather-rs
+    ports:
+      - "5000:5000" # Expose port 5000 for communication
+    networks:
+      - mynetwork
+
+  subtraction-rs:
+    build: ./subtraction-rs
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
