@@ -1,0 +1,47 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+metadata:
+  name: mather-rs
+profiles:
+  - name: prod
+    build:
+      artifacts:
+        - image: ghcr.io/pojntfx/mather-rs
+          context: .
+          docker:
+            dockerfile: Dockerfile
+      local:
+        useBuildkit: true
+    deploy:
+      helm:
+        releases:
+          - name: mather-rs
+            chartPath: charts/mather-rs
+            artifactOverrides:
+              meta.image: ghcr.io/pojntfx/mather-rs
+            setValueTemplates:
+              app.multiplier: "{{ .MULTIPLIER }}"
+  - name: dev
+    build:
+      artifacts:
+        - image: ghcr.io/pojntfx/mather-rs-dev
+          context: .
+          docker:
+            dockerfile: Deverfile
+          sync:
+            infer:
+              - "**/*.rs"
+              - "**/*.proto"
+      local:
+        useBuildkit: true
+    deploy:
+      helm:
+        releases:
+          - name: mather-rs-dev
+            chartPath: charts/mather-rs
+            artifactOverrides:
+              meta.image: ghcr.io/pojntfx/mather-rs-dev
+            setValues:
+              meta.dev: true
+            setValueTemplates:
+              app.multiplier: "{{ .MULTIPLIER }}"
