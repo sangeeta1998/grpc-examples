@@ -133,6 +133,45 @@ Now that the microservice is running, run a request to test it:
 grpcurl --plaintext --proto proto/mather.proto -d '{"FirstSummand": 1, "SecondSummand": 3}' localhost:5000 com.pojtinger.felicitas.grpcExamples.Mather.Add
 ```
 
+
+### ADDED ONE MORE SERVICE:
+
+
+# Navigate to mather-rs directory
+cd mather-rs
+
+# Build the mather-rs Docker image
+docker build -t mather-rs .
+
+# Run the mather-rs container
+docker run -d --name mather-rs -p 5000:5000 mather-rs
+
+Similarly,
+
+docker build -t subtraction-rs .
+docker run -d --name subtraction-rs -p 5001:5001 subtraction-rs
+
+# Verify if service is running
+
+docker logs mather-rs
+docker logs subtraction-rs
+
+# Using Docker compose
+ 
+docker-compose build
+docker-compose up -d
+
+# Testing mather-rs
+grpcurl --plaintext --proto mather-rs/proto/mather.proto -d '{"FirstSummand": 1, "SecondSummand": 3}' localhost:5000 com.pojtinger.felicitas.grpcExamples.Mather.Add
+
+# Testing subtraction-rs
+grpcurl --plaintext --proto subtraction-rs/proto/subtractor.proto -d '{"Minuend": 10, "Subtrahend": 5}' localhost:5001 com.pojtinger.felicitas.grpcExamples.Subtractor.Subtract
+
+
+# Cleaning up
+docker-compose down
+
+
 🚀 **That's it**! We hope you enjoy using mather-rs.
 
 ## Reference
