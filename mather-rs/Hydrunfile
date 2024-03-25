@@ -11,6 +11,8 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 . /root/.cargo/env
 
+rustup component add rustfmt
+
 # Install dependencies
 USER=root make depend
 
