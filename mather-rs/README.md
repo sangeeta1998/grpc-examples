@@ -145,6 +145,8 @@ docker build -t mather-rs .
 
 # Run the mather-rs container
 docker run -d --name mather-rs -p 5000:5000 mather-rs
+(If it doesn't work), try :
+docker run --name mather-rs -d --restart always -p 5000:5000 -e MULTIPLIER=1 ghcr.io/pojntfx/mather-rs
 
 Similarly,
 
