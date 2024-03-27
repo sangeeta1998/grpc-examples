@@ -4,16 +4,16 @@ package com.pojtinger.felicitas.grpcExamples;
 
 option go_package = "github.com/pojntfx/grpc-examples/gosubtractor/pkg/api/proto/v1";
 
-service Subtractor {
-  rpc Subtract(SubtractInputMessage) returns (SubtractOutputMessage);
+service Mather {
+  rpc Add(AddInputMessage) returns (AddOutputMessage);
 }
 
-message SubtractInputMessage {
-    int64 Minuend = 1;
-    int64 Subtrahend = 2;
+message AddInputMessage {
+    int64 FirstSummand = 1;
+    int64 SecondSummand = 2;
 }
 
-message SubtractOutputMessage {
+message AddOutputMessage {
     int64 Difference = 1;
 }
 
