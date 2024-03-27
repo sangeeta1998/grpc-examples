@@ -135,6 +135,17 @@ grpcurl --plaintext --proto proto/mather.proto -d '{"FirstSummand": 1, "SecondSu
 
 🚀 **That's it**! We hope you enjoy using mather-rs.
 
+
+### Commands to Build and Run Subtraction-rs 
+$ docker build -t subtraction-rs .
+$ docker run --name subtraction-rs -d -p 5001:5001 -e MULTIPLIER=1 subtraction-rs
+$ grpcurl --plaintext --proto proto/subtractor.proto -d '{"FirstSummand": 1, "SecondSummand": 3}' localhost:5001 com.pojtinger.felicitas.grpcExamples.Mather.Add
+
+### To call mather-rs service using proto
+
+$ grpcurl -plaintext -d '{"FirstSummand": 10, "SecondSummand": 5}' -import-path ~/grpc-examples/mather-rs/proto/ -proto mather.proto localhost:5000 com.pojtinger.felicitas.grpcExamples.Mather/Add
+
+
 ## Reference
 
 ### Environment Variables
