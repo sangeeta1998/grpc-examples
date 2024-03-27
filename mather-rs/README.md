@@ -148,10 +148,6 @@ docker run -d --name mather-rs -p 5000:5000 mather-rs
 (If it doesn't work), try :
 docker run --name mather-rs -d --restart always -p 5000:5000 -e MULTIPLIER=1 ghcr.io/pojntfx/mather-rs
 
-Similarly,
-
-docker build -t subtraction-rs .
-docker run -d --name subtraction-rs -p 5001:5001 subtraction-rs
 
 # Verify if service is running
 
@@ -162,6 +158,8 @@ docker logs subtraction-rs
  
 docker-compose build
 docker-compose up -d
+# Cleaning up
+docker-compose down
 
 # Testing mather-rs
 grpcurl --plaintext --proto mather-rs/proto/mather.proto -d '{"FirstSummand": 1, "SecondSummand": 3}' localhost:5000 com.pojtinger.felicitas.grpcExamples.Mather.Add
@@ -169,9 +167,11 @@ grpcurl --plaintext --proto mather-rs/proto/mather.proto -d '{"FirstSummand": 1,
 # Testing subtraction-rs
 grpcurl --plaintext --proto subtraction-rs/proto/subtractor.proto -d '{"Minuend": 10, "Subtrahend": 5}' localhost:5001 com.pojtinger.felicitas.grpcExamples.Subtractor.Subtract
 
+# Calling subtraction-rs from mather-rs
+grpcurl -plaintext -d '{"FirstSummand": 10, "SecondSummand": 5}' -import-path ~/grpc-examples/subtraction-rs/proto/ -proto subtractor.proto localhost:5001 com.pojtinger.felicitas.grpcExamples.Mather/Add
 
-# Cleaning up
-docker-compose down
+
+
 
 
 🚀 **That's it**! We hope you enjoy using mather-rs.
