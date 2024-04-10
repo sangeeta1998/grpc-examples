@@ -1,34 +1,36 @@
-# Build container
-FROM rust:latest AS build
+# Use a Rust base image for building
+FROM rust:latest AS builder
 
-# Install required packages
-RUN apt-get update && apt-get install -y \
-    curl \
-    make \
+# Set working directory
+WORKDIR /usr/src/app
+
+# Install required tools for building WebAssembly
+RUN apt-get update && \
+    apt-get install -y \
+    clang \
     && rm -rf /var/lib/apt/lists/*
 
-# Setup environment
-RUN mkdir -p /data
-WORKDIR /data
+# Install wasm-pack
+RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
-# Copy the source code into the container
+# Copy your Rust code
 COPY . .
 
-# Build the release
-RUN ./Hydrunfile
+# Build the WebAssembly binary
+RUN wasm-pack build --target web --out-dir ./target/web
 
-# Extract the release
-RUN mkdir -p /out
-RUN cp out/release/mather-rs.linux-$(uname -m) /out/mather-rs
+# Build container for serving WebAssembly
+FROM nginx:alpine
 
-# Release container
-FROM debian:bullseye
+# Set working directory
+WORKDIR /usr/share/nginx/html
 
-# Add certificates
-RUN apt update && apt install -y ca-certificates
+# Copy the WebAssembly files
+COPY --from=builder /usr/src/app/target/web .
 
-# Copy the release binary from the build stage
-COPY --from=build /out/mather-rs /usr/local/bin/mather-rs
+# Expose port
+EXPOSE 80
 
-CMD /usr/local/bin/mather-rs
+# Start nginx to serve the WebAssembly files
+CMD ["nginx", "-g", "daemon off;"]
 

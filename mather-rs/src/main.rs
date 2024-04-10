@@ -2,6 +2,15 @@ use tonic::{transport::Server, Request, Response, Status};
 use mather_rs::mather_server::{Mather, MatherServer};
 use mather_rs::{AddInputMessage, AddOutputMessage};
 
+// Import wasm_bindgen crate
+use wasm_bindgen::prelude::*;
+
+// Expose the add function as a WebAssembly module
+#[wasm_bindgen]
+pub fn add(first_summand: i64, second_summand: i64) -> i64 {
+    first_summand + second_summand
+}
+
 pub mod mather_rs {
     tonic::include_proto!("com.pojtinger.felicitas.grpc_examples");
 }
@@ -17,7 +26,8 @@ impl Mather for MyMather {
     ) -> Result<Response<AddOutputMessage>, Status> {
         let aim = request.into_inner();
 
-        let sum = aim.first_summand + aim.second_summand;
+        // Call the add function exposed as a WebAssembly module
+        let sum = add(aim.first_summand, aim.second_summand);
 
         let reply = AddOutputMessage { sum };
 

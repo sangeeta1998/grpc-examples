@@ -4,12 +4,22 @@ version = "0.1.0"
 authors = ["Felicitas Pojtinger <felicitas@pojtinger.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 tonic = "0.4"
 prost = "0.7"
-tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.0", features = ["full"] }
+#async-std ={version ="1.9", features = ["attributes"] }
+#mio = { version = "0.8.10", features = ["wasi"] }
+wasm-bindgen = "0.2.69"
+
 
 [build-dependencies]
 tonic-build = "0.4"
+
+#[target.'cfg(target_arch = "wasm32")']
+#rustflags = ["-C", "link-arg=-nostartfiles"]
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/main.rs"
